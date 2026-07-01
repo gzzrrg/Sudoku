@@ -1,0 +1,33 @@
+*.iml
+.gradle
+/local.properties
+.idea/
+.DS_Store
+/build
+/app/build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Claude Code
+/.claude/
+/CLAUDE.md
+
+# Gradle daemon JVM
+gradle/gradle-daemon-jvm.properties
+
+# OS files
+**/.DS_Store
+
+# Kotlin
+.kotlin/
+
+# Signing secrets (DO NOT COMMIT)
+signing.properties
+*.keystore
+*.jks
+
+# APK output
+/app/release/
+*.apk
