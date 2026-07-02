@@ -102,19 +102,11 @@ API 返回的 JSON 包含谜题盘面（`value`）和解答（`solution`）的 9
 
 ## 技术架构
 
-```
-┌─────────────────────────────────────────────┐
-│  UI 层 (Jetpack Compose)                    │
-│  HomeScreen / GameScreen / SettingsScreen   │
-│         ↕ StateFlow                         │
-│  ViewModel (HomeVM / GameVM / ProfileVM)    │
-│         ↕                                   │
-│  Repository (SudokuRepository)              │
-│    ↙        ↓         ↘                    │
-│  Room     DataStore    Retrofit             │
-│ (存档)   (偏好设置)    (远程 API)             │
-└─────────────────────────────────────────────┘
-```
+项目采用 MVVM + Repository 三层架构：
+
+- **UI 层** — Jetpack Compose 构建界面，通过 StateFlow 观察 ViewModel 状态，页面随数据变化自动更新
+- **ViewModel 层** — 管理界面状态与用户交互逻辑，调用 Repository 获取数据，不直接接触底层数据源
+- **Repository 层** — 统一数据访问入口，协调 Room（本地存储）、DataStore（偏好设置）、Retrofit（远程 API）三个数据源，内置离线降级与数据序列化
 
 | 类别 | 技术 |
 |------|------|

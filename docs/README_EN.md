@@ -102,19 +102,11 @@ Single-column layout on phones in portrait mode. Rotate to landscape or use a ta
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────┐
-│  UI Layer (Jetpack Compose)                 │
-│  HomeScreen / GameScreen / SettingsScreen   │
-│         ↕ StateFlow                         │
-│  ViewModel (HomeVM / GameVM / ProfileVM)    │
-│         ↕                                   │
-│  Repository (SudokuRepository)              │
-│    ↙        ↓         ↘                    │
-│  Room     DataStore    Retrofit             │
-│ (saves)  (prefs)      (remote API)          │
-└─────────────────────────────────────────────┘
-```
+The project follows a three-layer MVVM + Repository architecture:
+
+- **UI Layer** — Built with Jetpack Compose, observes ViewModel state via StateFlow for reactive UI updates
+- **ViewModel Layer** — Manages UI state and user interaction logic, calls Repository for data without touching data sources directly
+- **Repository Layer** — Single data access point, coordinates Room (local storage), DataStore (preferences), and Retrofit (remote API), with built-in offline fallback and serialization
 
 | Category | Technology |
 |----------|------------|
