@@ -1,7 +1,6 @@
 <p align="center">
-  <a href="../README.md">🇨🇳 中文</a>
-  &nbsp;|&nbsp;
-  <a href="README_EN.md">🇬🇧 English</a>
+  <a href="../README.md"><img alt="中文" src="https://img.shields.io/badge/文档-中文-red?style=flat-square"></a>
+  <a href="README_EN.md"><img alt="English" src="https://img.shields.io/badge/Docs-English-blue?style=flat-square"></a>
 </p>
 
 <p align="center">
@@ -16,50 +15,75 @@
   <img src="images/图标.png" alt="Sudoku Icon" width="140" />
 </p>
 
-<h1 align="center">Sudoku</h1>
+<h1 align="center">Sudoku · 数独</h1>
 
 <p align="center">
-  <b>A modern, feature-rich Sudoku game for Android.</b><br>
-  Built with Jetpack Compose + Material 3 · MVVM Architecture · Offline Ready
+  <b>Ad-free · No subscriptions · Pure Sudoku experience</b><br>
+  Jetpack Compose + Material 3 · MVVM Architecture
 </p>
 
 ---
 
-## Screenshots
+## Background
+
+As a Sudoku enthusiast, I often play Sudoku on my phone. However, apps on the store are either plagued by ads or require a paid membership to remove them. So I decided to build my own — a clean, ad-free, completely free, and fully-featured Sudoku game.
+
+## Overview
+
+Sudoku is a modern Android Sudoku app built with Kotlin and Jetpack Compose. Puzzles are fetched from the dosuku API by default; when the request times out or the network is unavailable, it automatically falls back to a local backtracking generator. It offers three difficulty levels, pencil marks, undo/redo, hints, real-time timing, and statistics.
+
+## Puzzle Generation
+
+The game prioritizes the [dosuku API](https://sudoku-api.vercel.app/api/dosuku) for fetching puzzles.
+
+```
+GET https://sudoku-api.vercel.app/api/dosuku
+```
+
+The API returns JSON containing a 9×9 puzzle (`value`) and its solution (`solution`). On timeout or failure, it falls back to the local backtracking generator, which creates puzzles at the selected difficulty.
+
+| Difficulty | Givens | Blanks |
+|------------|--------|--------|
+| Easy | 38–42 | 39–43 |
+| Medium | 28–32 | 49–53 |
+| Hard | 22–26 | 55–59 |
+
+Every puzzle is guaranteed to have a unique solution.
+
+## Screens
+
+### Themes
+
+Three complete themes. Every component adapts across all three, with support for following the system preference.
 
 <p align="center">
-  <img src="images/主页效果.jpg" alt="Home Screen" width="30%" />
-  <img src="images/选择数字效果.jpg" alt="Gameplay" width="30%" />
-  <img src="images/设置页.jpg" alt="Settings" width="30%" />
+  <img src="images/浅色主题.jpg" alt="Light (Green)" width="30%" />
+  <img src="images/深色主题效果.jpg" alt="Dark" width="30%" />
+  <img src="images/白色主题效果.jpg" alt="White" width="30%" />
+</p>
+
+### Responsive Layout
+
+Single-column layout on phones in portrait mode. Rotate to landscape or use a tablet, and the UI switches to a dual-pane layout (board 65% + controls 35%), making full use of the screen.
+
+<p align="center">
+  <img src="images/横屏效果.jpg" alt="Landscape" width="50%" />
 </p>
 
 ## Features
 
 ### Core Gameplay
 
-- **Three Difficulty Levels** — Easy (38–42 givens), Medium (28–32), and Hard (22–26). Each puzzle is guaranteed to have a unique solution.
-
-- **Remote Puzzles + Offline Fallback** — Puzzles are fetched from the dosuku API by default. When the network is unavailable, the built-in backtracking generator seamlessly takes over — you can always play.
-
-  <p align="center">
-    <img src="images/api请求页.jpg" alt="API Request" width="60%" />
-  </p>
-
-- **Pencil Marks** — Tap the note toggle to enter pencil-mark mode. Each cell displays candidate numbers in a clean 3×3 sub-grid layout. The NumberPad highlights digits you've already noted, making it easy to track your candidates.
-
-  <p align="center">
-    <img src="images/笔记功能效果.jpg" alt="Pencil Marks" width="30%" />
-  </p>
-
-- **Undo / Redo** — Full operation history with unlimited undo and redo. Every action is tracked, including cell values and pencil marks. Rewind as far back as you need.
+- **Three difficulties** — Easy, Medium, and Hard, each puzzle guaranteed a unique solution.
+- **Remote puzzles + offline fallback** — Fetched from the dosuku API by default, with local generation on failure.
+- **Pencil marks** — Candidate numbers displayed in a clean 3×3 sub-grid per cell.
+- **Undo / Redo** — Unlimited history for every action.
 
 ### Assistance & Feedback
 
-- **Hint System** — 3 hints per game. Press the hint button and the currently selected empty cell is filled with the correct answer. A badge on the toolbar shows how many hints remain.
-
-- **Conflict Detection** — Invalid placements are highlighted in real-time with a distinct error color. Toggle conflict warnings on or off in settings.
-
-- **Error Limit** — The game ends after 3 cumulative mistakes (toggleable in settings). Turn it off for a relaxed experience.
+- **Hints** — 3 hints per game, with a remaining count badge on the toolbar.
+- **Conflict detection** — Invalid placements highlighted in real time (toggleable).
+- **Error limit** — Game ends after 3 mistakes (toggleable).
 
   <p align="center">
     <img src="images/输入错误提示.jpg" alt="Error Feedback" width="30%" />
@@ -68,37 +92,12 @@
 
 ### Progress & Data
 
-- **Auto Save** — Every move is automatically persisted to the local Room database. Close the app, switch tasks, or reboot your phone — your game is right where you left it.
-
-- **Real-time Timer** — Tracks your solve time with second-level precision. Automatically pauses when you leave the game screen and resumes when you come back.
-
-- **Statistics Dashboard** — Per-difficulty stats including games played, wins, win rate, error-free wins, win streak, best time, and average time. Canvas-drawn bar charts visualize your progress.
+- **Auto-save** — Every move persisted to the local Room database.
+- **Real-time timer** — Second-level precision, auto-pauses when leaving the game.
+- **Statistics** — Per-difficulty stats: games played, wins, win rate, streaks, best times.
 
   <p align="center">
     <img src="images/数据统计页效果.jpg" alt="Statistics" width="40%" />
-  </p>
-
-### Visual Design
-
-- **Three Complete Themes** — Every component adapts across all three themes. Switch anytime or follow your system preference.
-
-  <p align="center">
-    <img src="images/浅色主题.jpg" alt="Light (Green)" width="30%" />
-    <img src="images/深色主题效果.jpg" alt="Dark" width="30%" />
-    <img src="images/白色主题效果.jpg" alt="White" width="30%" />
-  </p>
-
-  | Theme | Background | Primary | Board BG | Grid Line | Selected | Best For |
-  |-------|-----------|---------|----------|-----------|----------|----------|
-  | Light (Green) | `#DFECD1` | `#8CB85C` | `#F7FAF2` | `#5D6A52` | `#8CB85C` | Daily use |
-  | Dark | `#1C1C1E` | `#8DC563` | `#2C2C2E` | `#636366` | `#8DC563` | Night use |
-  | White | `#FFFFFF` | `#8B7D6B` | `#F5F5F5` | `#999999` | `#E8E0D8` | Minimal look |
-
-- **Responsive Layout** — Phones in portrait mode use a single-column layout. Rotate to landscape or use a tablet and the UI switches to a dual-pane layout (board 65% + controls 35%).
-
-  <p align="center">
-    <img src="images/横屏效果.jpg" alt="Landscape Gameplay" width="50%" />
-    <img src="images/横屏笔记效果.jpg" alt="Landscape Notes" width="50%" />
   </p>
 
 ## Architecture
@@ -121,9 +120,9 @@
 |----------|------------|
 | Language | Kotlin 2.2.10 |
 | UI | Jetpack Compose + Material 3 (BOM 2026.02.01) |
-| Architecture | MVVM + Repository (manual DI via `AppContainer`) |
+| Architecture | MVVM + Repository (manual DI) |
 | Database | Room (game sessions + history) |
-| Preferences | DataStore (theme, sound, difficulty, stats) |
+| Preferences | DataStore (theme, difficulty, stats) |
 | Networking | Retrofit 2 + Gson |
 | Navigation | Compose Navigation |
 | Async | Kotlin Coroutines + StateFlow |

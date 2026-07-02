@@ -1,7 +1,6 @@
 <p align="center">
-  <a href="../README.md">🇨🇳 中文</a>
-  &nbsp;|&nbsp;
-  <a href="README_EN.md">🇬🇧 English</a>
+  <a href="../README.md"><img alt="中文" src="https://img.shields.io/badge/文档-中文-red?style=flat-square"></a>
+  <a href="README_EN.md"><img alt="English" src="https://img.shields.io/badge/Docs-English-blue?style=flat-square"></a>
 </p>
 
 <p align="center">
@@ -20,7 +19,7 @@
 
 <p align="center">
   <b>无广告 · 无付费 · 纯粹的数独体验</b><br>
-  Jetpack Compose + Material 3 · MVVM 架构 · 离线可用
+  Jetpack Compose + Material 3 · MVVM 架构
 </p>
 
 ---
@@ -31,50 +30,53 @@
 
 ## 项目概述
 
-Sudoku 是一款基于 Kotlin 与 Jetpack Compose 构建的现代 Android 数独应用。支持远程获取谜题与离线自动生成，提供三级难度、笔记模式、撤销重做、提示系统、实时计时、数据统计等功能。适配浅色 / 深色 / 白色三套主题与横竖屏布局，纯本地运行，无需注册登录。
+Sudoku 是一款基于 Kotlin 与 Jetpack Compose 构建的现代 Android 数独应用。游戏通过 dosuku API 在线获取谜题，请求超时或网络不可用时自动切换至本地回溯法算法生成，确保随时可玩。提供三级难度、笔记模式、撤销重做、提示系统、实时计时、数据统计等功能。
+
+## 谜题生成
+
+游戏优先调用 [dosuku API](https://sudoku-api.vercel.app/api/dosuku) 获取数独谜题。
+
+```
+GET https://sudoku-api.vercel.app/api/dosuku
+```
+
+API 返回的 JSON 包含谜题盘面（`value`）和解答（`solution`）的 9×9 数组。请求超时或失败时，自动降级为本地回溯法生成器，按所选难度控制给定数范围。
+
+| 难度 | 给定数 | 空格数 |
+|------|--------|--------|
+| 简单 | 38–42 | 39–43 |
+| 中等 | 28–32 | 49–53 |
+| 困难 | 22–26 | 55–59 |
+
+每道谜题保证唯一解。
 
 ## 页面介绍
 
-### 主页
+### 主题切换
 
-选择难度开始新游戏，或继续之前的存档。
+三套完整主题，所有组件在三套主题下完整适配，支持跟随系统设置。
 
 <p align="center">
-  <img src="images/主页效果.jpg" alt="主页" width="30%" />
+  <img src="images/浅色主题.jpg" alt="浅色（护眼绿）" width="30%" />
+  <img src="images/深色主题效果.jpg" alt="深色" width="30%" />
+  <img src="images/白色主题效果.jpg" alt="白色" width="30%" />
 </p>
 
-### 游戏页面
+### 响应式布局
 
-核心游戏界面，包含数独棋盘、数字键盘，以及笔记切换、撤销重做、提示等辅助操作。
-
-<p align="center">
-  <img src="images/选择数字效果.jpg" alt="游戏界面" width="30%" />
-  <img src="images/笔记功能效果.jpg" alt="笔记模式" width="30%" />
-</p>
-
-### 数据统计
-
-按难度展示游戏数、胜率、连胜、最佳用时等数据，柱状图直观呈现。
+手机竖屏采用单栏布局。旋转至横屏或使用平板时，自动切换为双栏布局（棋盘 65% + 控制区 35%），充分利用屏幕空间。
 
 <p align="center">
-  <img src="images/数据统计页效果.jpg" alt="数据统计" width="40%" />
-</p>
-
-### 设置
-
-自定义主题、冲突检测、错误限制等游戏偏好。
-
-<p align="center">
-  <img src="images/设置页.jpg" alt="设置" width="30%" />
+  <img src="images/横屏效果.jpg" alt="横屏效果" width="50%" />
 </p>
 
 ## 功能特性
 
 ### 核心玩法
 
-- **三级难度** — 简单（38–42 个提示数）、中等（28–32）、困难（22–26），每道谜题保证唯一解。
-- **远程谜题 + 离线降级** — 默认从 dosuku API 获取谜题，网络不可用时自动切换至内置回溯法生成。
-- **笔记模式** — 候选数标记，每格以 3×3 子网格布局显示候选数字，数字键盘同步高亮已标记项。
+- **三级难度** — 简单、中等、困难，每道谜题保证唯一解。
+- **远程谜题 + 离线降级** — 默认从 dosuku API 获取，网络不可用时自动切换本地生成。
+- **笔记模式** — 候选数标记，每格以 3×3 子网格布局显示候选数字。
 - **撤销 / 重做** — 完整操作历史，不限步数。
 
 ### 辅助与反馈
@@ -90,23 +92,12 @@ Sudoku 是一款基于 Kotlin 与 Jetpack Compose 构建的现代 Android 数独
 
 ### 进度与数据
 
-- **自动存档** — 每次操作自动保存至本地 Room 数据库，关闭应用、切换任务或重启手机，进度始终保留。
-- **实时计时** — 秒级精度，离开游戏页面自动暂停，返回自动恢复。
-
-### 视觉设计
-
-- **三套主题** — 浅色护眼绿、深色、白色极简，支持跟随系统设置。
+- **自动存档** — 每次操作自动保存至本地 Room 数据库，进度始终保留。
+- **实时计时** — 秒级精度，离开游戏自动暂停，返回自动恢复。
+- **数据统计** — 按难度展示游戏数、胜率、连胜、最佳用时等数据。
 
   <p align="center">
-    <img src="images/浅色主题.jpg" alt="浅色主题" width="30%" />
-    <img src="images/深色主题效果.jpg" alt="深色主题" width="30%" />
-    <img src="images/白色主题效果.jpg" alt="白色主题" width="30%" />
-  </p>
-
-- **响应式布局** — 竖屏单栏，横屏或平板自动切换双栏布局。
-
-  <p align="center">
-    <img src="images/横屏效果.jpg" alt="横屏效果" width="50%" />
+    <img src="images/数据统计页效果.jpg" alt="数据统计" width="40%" />
   </p>
 
 ## 技术架构
@@ -121,7 +112,7 @@ Sudoku 是一款基于 Kotlin 与 Jetpack Compose 构建的现代 Android 数独
 │  Repository (SudokuRepository)              │
 │    ↙        ↓         ↘                    │
 │  Room     DataStore    Retrofit             │
-│ (存档)   (偏好设置)    (远程API)              │
+│ (存档)   (偏好设置)    (远程 API)             │
 └─────────────────────────────────────────────┘
 ```
 
@@ -129,7 +120,7 @@ Sudoku 是一款基于 Kotlin 与 Jetpack Compose 构建的现代 Android 数独
 |------|------|
 | 语言 | Kotlin 2.2.10 |
 | UI | Jetpack Compose + Material 3（BOM 2026.02.01） |
-| 架构 | MVVM + Repository（手动 DI，通过 `AppContainer`） |
+| 架构 | MVVM + Repository（手动 DI） |
 | 数据库 | Room（游戏存档 + 历史记录） |
 | 偏好存储 | DataStore（主题、难度、统计数据） |
 | 网络 | Retrofit 2 + Gson |
@@ -144,7 +135,7 @@ com.zir.sudoku/
 ├── data/
 │   ├── local/                      # Room 数据库、DAO、实体、DataStore
 │   ├── remote/                     # Retrofit API 接口
-│   └── repository/                 # 统一数据访问 + 离线降级逻辑
+│   └── repository/                 # 统一数据访问 + 离线降级
 ├── domain/
 │   ├── model/                      # BoardState、Cell、Difficulty、Operation
 │   └── engine/                     # SudokuGenerator、SudokuValidator
